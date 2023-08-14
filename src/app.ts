@@ -39,7 +39,7 @@ app.ws("/archive/:roomId", async (ws: WebSocket, req: Request) =>
   _sockets.archiveChats(ws, req)
 );
 
-// app.use('/api/v1/chats', chatRoutes)
+app.use("/api/v1/chats", chatRoutes);
 
 app.use((req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, "Not found"));
