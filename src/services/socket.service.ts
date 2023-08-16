@@ -32,11 +32,23 @@ export default class SocketService {
           const roomId = item.roomId;
 
           // Find all Messages with the roomId
+          const members = [];
           const messages = await this.messageRepo.find({ roomId });
+          for (let item of messages) {
+            const check = members.filter((obj) => {
+              if (obj.id === item.user.id) {
+                return true;
+              }
+              return false;
+            });
+            if (!check) {
+              members.push(item.user);
+            }
+          }
           const chats = JSON.stringify(messages);
 
           // Update archived chats and delete original messages
-          await this.archiveRepo.update({ chats }, { roomId });
+          await this.archiveRepo.update({ chats, members }, { roomId });
           await this.messageRepo.delete({ roomId });
         }
       }
